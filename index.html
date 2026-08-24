@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>javascript/css test</title>
+<style>
+body{font-family:sans-serif;padding:20px;background:#f8f9fa}
+h3{margin:15px 0 5px;color:#333}
+.test-item{margin:4px 0;padding:2px 8px;background:#fff;border-radius:4px;display:flex;justify-content:space-between;max-width:400px}
+.pass{color:#28a745;font-weight:bold}
+.fail{color:#dc3545;font-weight:bold}
+.result{font-size:1.3rem;margin-top:20px;padding:10px 0;border-top:2px solid #dee2e6}
+.result span{font-weight:bold}
+#css-check{position:absolute;visibility:hidden;background-color:#ff0000}
+</style>
+</head>
+<body>
+<div id="tests"></div>
+<div id="result"></div>
+<div id="css-check"></div>
+<script>
+(function(){
+var jsTests=[
+{name:'window',fn:function(){return typeof window!=='undefined'}},
+{name:'document',fn:function(){return typeof document!=='undefined'}},
+{name:'addEventListener',fn:function(){return typeof window.addEventListener==='function'}},
+{name:'Promise',fn:function(){return typeof Promise!=='undefined'}},
+{name:'fetch',fn:function(){return typeof fetch==='function'}},
+{name:'localStorage',fn:function(){try{localStorage.setItem('_','_');localStorage.removeItem('_');return true}catch(e){return false}}},
+{name:'sessionStorage',fn:function(){try{sessionStorage.setItem('_','_');sessionStorage.removeItem('_');return true}catch(e){return false}}},
+{name:'JSON',fn:function(){return typeof JSON!=='undefined'}},
+{name:'Array.prototype.forEach',fn:function(){return typeof [].forEach==='function'}}
+];
+var cssTests=[
+{name:'display:flex',fn:function(){return CSS.supports('display','flex')}},
+{name:'display:grid',fn:function(){return CSS.supports('display','grid')}},
+{name:'CSS variables',fn:function(){return CSS.supports('--var','value')}},
+{name:'backdrop-filter',fn:function(){return CSS.supports('backdrop-filter','blur(1px)')}},
+{name:'clip-path',fn:function(){return CSS.supports('clip-path','inset(0)')}},
+{name:'position:sticky',fn:function(){return CSS.supports('position','sticky')}},
+{name:'mix-blend-mode',fn:function(){return CSS.supports('mix-blend-mode','multiply')}},
+{name:'filter',fn:function(){return CSS.supports('filter','grayscale(1)')}}
+];
+var container=document.getElementById('tests');
+var html='<h3>JavaScript tests</h3>';
+jsTests.forEach(function(t){
+var res=t.fn();
+html+='<div class="test-item"><span>'+t.name+'</span><span class="'+(res?'pass':'fail')+'">'+(res?'True':'False')+'</span></div>';
+});
+html+='<h3>CSS tests</h3>';
+cssTests.forEach(function(t){
+var res=t.fn();
+html+='<div class="test-item"><span>'+t.name+'</span><span class="'+(res?'pass':'fail')+'">'+(res?'True':'False')+'</span></div>';
+});
+container.innerHTML=html;
+var resultDiv=document.getElementById('result');
+var jsPresent=true;
+var checkEl=document.getElementById('css-check');
+var computedBg=window.getComputedStyle(checkEl).backgroundColor;
+var cssPresent=(computedBg==='rgb(255, 0, 0)'||computedBg==='#ff0000'||computedBg==='red');
+resultDiv.innerHTML='<div class="result">JavaScript — <span class="'+(jsPresent?'pass':'fail')+'">'+(jsPresent?'True':'False')+'</span></div><div class="result">CSS — <span class="'+(cssPresent?'pass':'fail')+'">'+(cssPresent?'True':'False')+'</span></div>';
+})();
+</script>
+</body>
+</html>
